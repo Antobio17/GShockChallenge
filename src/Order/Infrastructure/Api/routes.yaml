@@ -1,0 +1,5 @@
+CreateOrder:
+    path: /create
+    controller: App\Order\Infrastructure\Api\CreateOrderController
+    methods: [POST]
+    
