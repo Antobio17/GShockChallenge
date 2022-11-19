@@ -97,9 +97,15 @@ class CreateOrderController extends AbstractController
             static::REQUEST_FIELD_ORDER_LINES => $orderLines
         );
 
+        $currentDay = date_create()->setTime(0, 0);
+        if ($orderAtTimestamp !== NULL && $currentDay > date_create()->setTimestamp($orderAtTimestamp)):
+            $dateValidation = array('The order date cannot be earlier than the current day.');
+        endif;
+
         $messages = array_merge(
             ToolsHelper::validateRequiredRequestFields($requiredFields),
-            $this->_validateOrderLines($orderLines)
+            $this->_validateOrderLines($orderLines),
+            $dateValidation ?? array()
         );
 
         return empty($messages) ? NULL : CreateOrderResponse::ofError($messages);
@@ -130,7 +136,7 @@ class CreateOrderController extends AbstractController
 
                 if (
                     !is_numeric($orderLine[static::REQUEST_FIELD_QUANTITY]) ||
-                    $orderLine[static::REQUEST_FIELD_QUANTITY] > 0
+                    $orderLine[static::REQUEST_FIELD_QUANTITY] <= 0
                 ):
                     $quantityValidation = array('The value of the quantity must be greater than zero.');
                 endif;
