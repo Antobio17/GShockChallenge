@@ -1,3 +1,4 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+CreateOrder:
+  prefix: /api/order
+  resource: ../src/Order/Infrastructure/Api/routes.yaml
+  trailing_slash_on_root: false
