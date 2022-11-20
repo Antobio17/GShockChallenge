@@ -5,11 +5,9 @@ namespace App\Order\Domain\Model;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
-use App\Order\Domain\Model\Order;
-use App\Order\Infrastructure\Repository\OrderLineRepository;
 
 /**
- * @ORM\Entity(repositoryClass=OrderLineRepository::class)
+ * @ORM\Entity()
  */
 class OrderLine
 {
@@ -105,23 +103,13 @@ class OrderLine
         $this->amount = $amount;
         $this->IVA = $IVA;
         $this->discountPercent = $discountPercent;
-        $this->taxableIncome = $this->calculateTaxableIncome();
         $this->discountAmount = $this->calculateDiscountAmount();
+        $this->taxableIncome = $this->calculateTaxableIncome();
         $this->tax = $this->calculateTax();
         $this->total = $this->calculateTotal();
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
-
-    /**
-     * Gets the ID property of the order line.
-     *
-     * @return int int
-     */
-    public function getID(): ?int
-    {
-        return $this->id;
-    }
 
     /**
      * Gets the taxable income property of the order line.
@@ -164,26 +152,6 @@ class OrderLine
     }
 
     /**
-     * Gets the product property of the order line.
-     *
-     * @return string string
-     */
-    public function getProduct(): string
-    {
-        return $this->product;
-    }
-
-    /**
-     * Gets the quantity property of the order line.
-     *
-     * @return float float
-     */
-    public function getQuantity(): float
-    {
-        return $this->quantity;
-    }
-
-    /**
      * Gets the amount property of the order line.
      *
      * @return float float
@@ -222,7 +190,7 @@ class OrderLine
      */
     public function calculateTaxableIncome(): float
     {
-        return $this->getAmount() / (1 + ($this->getIVA() / 100));
+        return $this->getAmount() * $this->quantity - $this->getDiscountAmount();
     }
 
     /**
@@ -232,7 +200,7 @@ class OrderLine
      */
     public function calculateDiscountAmount(): float
     {
-        return $this->getAmount() * $this->getDiscountPercent() / 100;
+        return ($this->getAmount() * $this->getDiscountPercent() / 100) * $this->quantity;
     }
 
     /**
@@ -242,7 +210,7 @@ class OrderLine
      */
     public function calculateTax(): float
     {
-        return $this->getAmount() * $this->getIVA() / 100;
+        return $this->getTaxableIncome() * $this->getIVA() / 100;
     }
 
     /**
@@ -252,7 +220,7 @@ class OrderLine
      */
     public function calculateTotal(): float
     {
-        return $this->getAmount() + $this->getTax() - $this->getDiscountAmount();
+        return $this->getTaxableIncome() + $this->getTax();
     }
 
 }

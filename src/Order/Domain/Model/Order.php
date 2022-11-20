@@ -118,7 +118,7 @@ class Order
      *
      * @return DateTime DateTime
      */
-    public function getOrderAt(): DateTime
+    public function getDate(): DateTime
     {
         return $this->orderAt;
     }
@@ -134,23 +134,23 @@ class Order
     }
 
     /**
-     * Gets the remarks property of the order.
-     *
-     * @return string|null string|null
-     */
-    public function getRemarks(): ?string
-    {
-        return $this->remarks;
-    }
-
-    /**
-     * Gets the taxable income property of the order.
+     * Gets the subtotal price of the order.
      *
      * @return float float
      */
-    public function getTaxableIncome(): float
+    public function getSubtotal(): float
     {
         return $this->taxableIncome;
+    }
+
+    /**
+     * Gets the discount percent applied to the order.
+     *
+     * @return float float
+     */
+    public function getDiscountPercent(): float
+    {
+        return ($this->taxableIncome + $this->discountAmount) * 100 / $this->taxableIncome - 100;
     }
 
     /**
@@ -183,18 +183,17 @@ class Order
         return $this->total;
     }
 
-    /**
-     * Gets the order lines property of the order.
-     *
-     * @return ArrayCollection|Collection ArrayCollection|Collection
-     */
-    public function getOrderLines()
-    {
-        return $this->orderLines;
-    }
-
-
     /*********************************************** PUBLIC METHODS ***********************************************/
+
+    /**
+     * Gets the total order lines.
+     *
+     * @return int int
+     */
+    public function getNumberOfItems(): int
+    {
+        return $this->orderLines->count();
+    }
 
     /**
      * Adds a new order line in the collection.
