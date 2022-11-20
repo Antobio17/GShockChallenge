@@ -103,8 +103,10 @@ class CreateOrderHandler implements MessageHandlerInterface
         foreach ($orderLines as $orderLineData):
             $totalAmount += $orderLineData[CreateOrderController::REQUEST_FIELD_AMOUNT] *
                 $orderLineData[CreateOrderController::REQUEST_FIELD_QUANTITY];
-
-            if (!isset($discountPercent) && $totalAmount > Order::THRESHOLD_FIRST_DISCOUNT):
+            if (
+                !isset($discountPercent) && $totalAmount > Order::THRESHOLD_FIRST_DISCOUNT
+                && $totalAmount <= Order::THRESHOLD_SECOND_DISCOUNT
+            ):
                 $discountPercent = Order::FIRST_DISCOUNT_PERCENT_VALUE;
             elseif ($totalAmount > Order::THRESHOLD_SECOND_DISCOUNT):
                 $discountPercent = Order::SECOND_DISCOUNT_PERCENT_VALUE;

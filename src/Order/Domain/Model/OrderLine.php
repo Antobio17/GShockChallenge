@@ -200,7 +200,7 @@ class OrderLine
      */
     public function calculateDiscountAmount(): float
     {
-        return ($this->getAmount() * $this->getDiscountPercent() / 100) * $this->quantity;
+        return $this->getAmount() * $this->quantity * $this->getDiscountPercent() / 100;
     }
 
     /**
