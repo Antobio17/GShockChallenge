@@ -2,4 +2,9 @@ CreateOrder:
     path: /create
     controller: App\Order\Infrastructure\Api\CreateOrderController
     methods: [POST]
+
+GetOrder:
+    path: /get
+    controller: App\Order\Infrastructure\Api\GetOrderController
+    methods: [GET]
     
