@@ -1,0 +1,6 @@
+App\Order\Domain\Model\Order:
+  Order-0:
+    __construct:
+      orderAt: <dateTime()>
+      reference: HAL96DGB6
+      remarks: Test remarks

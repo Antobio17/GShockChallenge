@@ -150,7 +150,8 @@ class Order
      */
     public function getDiscountPercent(): float
     {
-        return ($this->taxableIncome + $this->discountAmount) * 100 / $this->taxableIncome - 100;
+        return $this->taxableIncome > 0 ?
+            ($this->taxableIncome + $this->discountAmount) * 100 / $this->taxableIncome - 100 : 0.0;
     }
 
     /**
