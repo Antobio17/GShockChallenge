@@ -61,10 +61,10 @@ bin/phpunit
 ## Endpoint calls with Postman
 
 ### Order creation
-JSON example:
+JSON example (To perform the tests it is necessary to use a current timestamp for the **orderAtTimestamp**):
 ```json
 {
-    "orderAtTimestamp": 1668937652, // To perform the tests it is necessary to use a current timestamp.
+    "orderAtTimestamp": 1668937652,
     "reference": "UdIdT5sdsss3l242",
     "remarks": "Test observations for the new order to be created.",
     "orderLines": [
