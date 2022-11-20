@@ -67,12 +67,9 @@ class CreateOrderController extends AbstractController
             $createOrderResponse = $this->handle(new CreateOrderQuery(
                 $orderAtTimestamp, $reference, $remarks, $orderLines
             ));
-            $status = $createOrderResponse->getOrder() !== NULL ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST;
-        else:
-            $status = Response::HTTP_BAD_REQUEST;
         endif;
 
-        return $this->json($createOrderResponse, $status);
+        return $this->json($createOrderResponse, $createOrderResponse->getCode());
     }
 
     /********************************************** PRIVATE METHODS *********************************************/
@@ -108,7 +105,7 @@ class CreateOrderController extends AbstractController
             $dateValidation ?? array()
         );
 
-        return empty($messages) ? NULL : CreateOrderResponse::ofError($messages);
+        return empty($messages) ? NULL : CreateOrderResponse::ofError(Response::HTTP_BAD_REQUEST, $messages);
     }
 
     /**
