@@ -8,6 +8,7 @@ use App\Order\Domain\Model\Order;
 use App\Order\Domain\Model\OrderLine;
 use App\Order\Domain\Repository\OrderRepositoryInterface;
 use App\Order\Infrastructure\Api\CreateOrderController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
 class CreateOrderHandler implements MessageHandlerInterface
@@ -66,18 +67,20 @@ class CreateOrderHandler implements MessageHandlerInterface
                     $order, $orderLineData[CreateOrderController::REQUEST_FIELD_PRODUCT],
                     $orderLineData[CreateOrderController::REQUEST_FIELD_QUANTITY],
                     $orderLineData[CreateOrderController::REQUEST_FIELD_AMOUNT],
-                    $this->_calculateDiscountPercentToApply($createOrderQuery->getOrderLines()),
+                    $this->calculateDiscountPercentToApply($createOrderQuery->getOrderLines()),
                     $orderLineData[CreateOrderController::REQUEST_FIELD_IVA],
                 );
                 $order->addOrderLine($orderLine);
             endforeach;
 
             $saved = $this->getOrderRepository()->save($order);
-            $response = $saved ? CreateOrderResponse::ofSuccess($order) : CreateOrderResponse::ofError(array(
+            $response = $saved ? CreateOrderResponse::ofSuccess($order) : CreateOrderResponse::ofError(
+                Response::HTTP_INTERNAL_SERVER_ERROR, array(
                 'An error occurred while saving the entity.'
             ));
         else:
-            $response = CreateOrderResponse::ofError(array(
+            $response = CreateOrderResponse::ofError(
+                Response::HTTP_CONFLICT, array(
                 'There is already an order with this reference.'
             ));
         endif;
@@ -85,7 +88,7 @@ class CreateOrderHandler implements MessageHandlerInterface
         return $response;
     }
 
-    /********************************************** PRIVATE METHODS *********************************************/
+    /************************************************ PUBLIC METHODS *********************************************/
 
     /**
      * Calculates the discount percent to apply in the order.
@@ -94,7 +97,7 @@ class CreateOrderHandler implements MessageHandlerInterface
      *
      * @return float float
      */
-    private function _calculateDiscountPercentToApply(array $orderLines): float
+    public function calculateDiscountPercentToApply(array $orderLines): float
     {
         $totalAmount = 0.0;
         foreach ($orderLines as $orderLineData):

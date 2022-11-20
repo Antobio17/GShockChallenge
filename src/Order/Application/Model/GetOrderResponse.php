@@ -2,6 +2,8 @@
 
 namespace App\Order\Application\Model;
 
+use Symfony\Component\HttpFoundation\Response;
+
 /**
  * GetOrderResponse.
  */
@@ -15,16 +17,23 @@ class GetOrderResponse
      */
     private array $orders;
 
+    /**
+     * @var int
+     */
+    private int $code;
+
     /************************************************* CONSTRUCT **************************************************/
 
     /**
      * GetOrderResponse construct.
      *
      * @param array $orders Order of the response or null if an error occurred.
+     * @param int $code The code of the response.
      */
-    private function __construct(array $orders)
+    private function __construct(array $orders, int $code)
     {
         $this->orders = $orders;
+        $this->code = $code;
     }
 
     /******************************************** GETTERS AND SETTERS *********************************************/
@@ -39,6 +48,16 @@ class GetOrderResponse
         return $this->orders;
     }
 
+    /**
+     * Gets the code of the response.
+     *
+     * @return int int
+     */
+    public function getCode(): int
+    {
+        return $this->code;
+    }
+
     /*********************************************** STATIC METHODS ************************************************/
 
     /**
@@ -50,7 +69,7 @@ class GetOrderResponse
      */
     public static function ofSuccess(array $orders): self
     {
-        return new self($orders);
+        return new self($orders, Response::HTTP_OK);
     }
 
 }

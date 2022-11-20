@@ -43,7 +43,9 @@ class GetOrderController extends AbstractController
      */
     public function __invoke(Request $request): JsonResponse
     {
-        return $this->json($this->handle(new GetOrderQuery()), Response::HTTP_OK);
+        $response = $this->handle(new GetOrderQuery());
+
+        return $this->json($response, $response->getCode());
     }
 
 }

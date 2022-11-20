@@ -3,6 +3,7 @@
 namespace App\Order\Application\Model;
 
 use App\Order\Domain\Model\Order;
+use Symfony\Component\HttpFoundation\Response;
 
 class CreateOrderResponse
 {
@@ -15,6 +16,11 @@ class CreateOrderResponse
     private ?Order $order;
 
     /**
+     * @var int
+     */
+    private int $code;
+
+    /**
      * @var array
      */
     private array $messages;
@@ -25,11 +31,13 @@ class CreateOrderResponse
      * CreateOrderResponse construct.
      *
      * @param Order|null $order Order of the response or null if an error occurred.
+     * @param int $code The code of the response.
      * @param array $messages Messages of the response.
      */
-    private function __construct(?Order $order, array $messages)
+    private function __construct(?Order $order, int $code, array $messages)
     {
         $this->order = $order;
+        $this->code = $code;
         $this->messages = $messages;
     }
 
@@ -43,6 +51,16 @@ class CreateOrderResponse
     public function getOrder(): ?Order
     {
         return $this->order;
+    }
+
+    /**
+     * Gets the code of the response.
+     *
+     * @return int int
+     */
+    public function getCode(): int
+    {
+        return $this->code;
     }
 
     /**
@@ -66,19 +84,20 @@ class CreateOrderResponse
      */
     public static function ofSuccess(Order $order): self
     {
-        return new self($order, array('Created'));
+        return new self($order, Response::HTTP_CREATED, array('Created'));
     }
 
     /**
      * Facade to create a success response.
      *
+     * @param int $code
      * @param array $messages
      *
      * @return self self
      */
-    public static function ofError(array $messages): self
+    public static function ofError(int $code, array $messages): self
     {
-        return new self(NULL, $messages);
+        return new self(NULL, $code, $messages);
     }
 
 }
