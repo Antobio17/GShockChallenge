@@ -58,3 +58,33 @@ docker exec -it php-container-gshock bash
 bin/phpunit
 ```
 
+## Endpoint calls with Postman
+
+### Order creation
+JSON example:
+```json
+{
+    "orderAtTimestamp": 1668937652, // To perform the tests it is necessary to use a current timestamp.
+    "reference": "UdIdT5sdsss3l242",
+    "remarks": "Test observations for the new order to be created.",
+    "orderLines": [
+        {
+        "product": "Producto 1",
+        "quantity": 10,
+        "amount": 28.4,
+        "iva": 21
+        },
+        {
+            "product": "Producto 2",
+            "quantity": 2,
+            "amount": 15.6,
+            "iva": 21
+        }
+    ]
+}
+```
+![Order creation](doc/images/img.png)
+
+### Order retrieval
+![Order retrieval](doc/images/img_1.png)
+
