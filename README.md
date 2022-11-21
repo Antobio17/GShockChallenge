@@ -1,5 +1,5 @@
-# GShockChallenge
-GShock technical challenge.
+# GStockChallenge
+GStock technical challenge.
 
 ## Installation and use
 
