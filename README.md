@@ -15,12 +15,17 @@ docker-compose up --build -d
 Once the services are running we will proceed to install the project dependencies and perform the database migration:
 
 ```shell
-# We will install the dependencies with:
-docker-compose exec php-service-gshock composer install --ignore-platform-reqs
+# We will enter to the container:
+docker exec -it php-container-gshock bash
 
-# We will create and execute the database migration with:
-docker-compose exec php-service-gshock bin/console doctrine:migrations:diff
-docker-compose exec php-service-gshock bin/console doctrine:migrations:execute --up 'DoctrineMigrations\VersionXXXXXXXXXXXXXX'
+# Inside the container, We will install the dependencies with:
+composer install --ignore-platform-reqs
+
+# Inside the container, We will create and execute the database migration with:
+chmod +x bin/console # We give permissions
+mkdir migrations # If the directory does not exist
+bin/console doctrine:migrations:diff
+bin/console doctrine:migrations:execute --up 'DoctrineMigrations\VersionXXXXXXXXXXXXXX'
 ```
 
 With the environment running we can proceed to make requests to the API in http://localhost:8000/.
