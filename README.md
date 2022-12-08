@@ -22,7 +22,7 @@ docker exec -it php-container-gshock bash
 composer install --ignore-platform-reqs
 
 # Inside the container, We will create and execute the database migration with:
-chmod +x bin/console # We give permissions
+chmod +x bin/console # For permissions
 mkdir migrations # If the directory does not exist
 bin/console doctrine:migrations:diff
 bin/console doctrine:migrations:execute --up 'DoctrineMigrations\VersionXXXXXXXXXXXXXX'
@@ -59,7 +59,8 @@ To launch these tests we only need to execute the following commands (with the d
 
 ```shell
 docker exec -it php-container-gshock bash
-# Once inside the container we execute
+# Once inside the container we execute:
+chmod +x bin/phpunit # For permissions
 bin/phpunit
 ```
 
